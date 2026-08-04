@@ -13,16 +13,28 @@
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": true,
+                    "priority": 0
                 },
                 {
                     "name": "Move",
                     "type": "Value",
-                    "id": "f6253f86-9830-4e1c-93da-45c5a86e2dfd",
+                    "id": "1d6031b7-d733-419e-8832-986b816c7ca0",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "Grab",
+                    "type": "Button",
+                    "id": "1b602277-2a7e-4034-b2b8-7ffe1789456d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -39,8 +51,8 @@
                 },
                 {
                     "name": "2D Vector",
-                    "id": "cbc1f365-e916-4b72-8cd0-a3f725bd2575",
-                    "path": "2DVector(overrideModifiersNeedToBePressedFirst=true)",
+                    "id": "cf3d42d5-1a2f-40d0-9cb3-36c696619cd3",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -50,7 +62,7 @@
                 },
                 {
                     "name": "Up",
-                    "id": "9ee8aa62-596a-40f0-9c7e-8762af62a7a7",
+                    "id": "2b1520e4-95d5-4172-b0c7-c1a35b7d3177",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
@@ -61,7 +73,7 @@
                 },
                 {
                     "name": "Down",
-                    "id": "ba7ca8d5-e1d6-42bd-925d-9f977b2c20f1",
+                    "id": "8ad9e4ad-867a-4094-b8b8-1e432647301f",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
@@ -72,7 +84,7 @@
                 },
                 {
                     "name": "Left",
-                    "id": "0b015172-75c8-43e3-b6d8-1cb8dee908a9",
+                    "id": "abf0fb6f-fcd0-4581-b238-f9cf4246ff8e",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -83,7 +95,7 @@
                 },
                 {
                     "name": "Right",
-                    "id": "877038e0-e139-4c11-829d-8dda711d4936",
+                    "id": "abeb8993-ccf7-4fff-a07f-470b42a7f2b3",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -91,6 +103,17 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "4a446aff-bfa1-44ea-9b8a-bcd4a0539e37",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
