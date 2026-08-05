@@ -9,8 +9,6 @@ public class PlayerGrab : MonoBehaviour
 	Transform _camera;
 	[SerializeField]
 	float _grabMaxDistance;
-	[SerializeField]
-	float _grabForce;
 
 	[SerializeField]
 	float _grabDistance;
@@ -60,15 +58,16 @@ public class PlayerGrab : MonoBehaviour
 			case GrabState.None:
 				break;
 			case GrabState.Grab:
-				
-				Vector3 pos = _camera.position+ _camera.forward * _grabDistance;
+
 				_grabedObject.transform.rotation = Quaternion.identity;
-				if(_grabedObject.TryGetComponent(out Rigidbody rigidbody))
+				if (_grabedObject.TryGetComponent(out Rigidbody rigidbody))
 				{
-					_grabedObject.Grab();
-					Vector3 force = (pos - _grabedObject.transform.position) * _grabForce;
-				
-					rigidbody.AddForce(force, ForceMode.Acceleration);
+					Vector3 targetPos = _camera.position + _camera.forward * _grabDistance;
+
+					Vector3 velocity = (targetPos - rigidbody.position) / Time.fixedDeltaTime;
+
+					rigidbody.linearVelocity = velocity;
+					rigidbody.angularVelocity = Vector3.zero;
 				}
 				break;
 		}

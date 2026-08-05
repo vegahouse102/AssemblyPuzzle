@@ -7,12 +7,6 @@ public class GrabableObject :MonoBehaviour
 	{
 		_rigidbody = GetComponent<Rigidbody>();
 	}
-	public void Grab()
-	{
-		_rigidbody.useGravity = false;
-		_rigidbody.linearVelocity = Vector3.zero;
-		_rigidbody.angularVelocity = Vector3.zero;
-	}
 	public void UnGrab()
 	{
 		_rigidbody.useGravity = true;
