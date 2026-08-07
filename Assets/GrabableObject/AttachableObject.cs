@@ -38,7 +38,7 @@ public class AttachableObject : MonoBehaviour
 }
 public struct ChangeTransformDTO
 {
-	public Vector3 Position;
-	public Vector3 Rotation;
+	public Vector3 DeltaPosition;
+	public Vector3 DeltaRotation;
 	public GameObject ChangedObject;
 }
