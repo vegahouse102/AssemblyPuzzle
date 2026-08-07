@@ -101,6 +101,7 @@ public class PlayerGrab : MonoBehaviour
 			case GrabState.None:
 				break;
 			case GrabState.Grab:
+				_grabedObject.Grab();
 				break;
 		}
 	}
