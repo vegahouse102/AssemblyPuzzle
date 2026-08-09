@@ -11,7 +11,7 @@ public class TestAttachSocket : MonoBehaviour
 	{
 		Sequence sequence = DOTween.Sequence();
 		sequence.AppendInterval(3f);
-		sequence.AppendCallback(() =>  _socket.AttachObject(_testAttachableObject));
+		sequence.AppendCallback(() =>  _socket.TestAttachObject(_testAttachableObject));
 	}
 
 	// Update is called once per frame

@@ -12,7 +12,11 @@ public class AttachSocket : MonoBehaviour
 	[SerializeField]
 	Vector3 _localAttachRotation;
 
+
+	private AttachableObject _attachedObject;
 	public PieceSO AttachableObjectSO => _thisObject.AttachableObjectSO;
+
+	public AttachableObject ThisAttachableObject => _thisObject;
 
 	private void Awake()
 	{
@@ -25,11 +29,12 @@ public class AttachSocket : MonoBehaviour
 	{
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
-			if (otherSocket.AttachableObjectSO == _connectedObjectSO)
+			if (otherSocket.AttachableObjectSO == _connectedObjectSO
+				&&other.attachedRigidbody != null 
+				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
 			{
-				Debug.Log("Attached");
-
-				//AttachObject(other.attachedRigidbody.gameObject);
+				_attachedObject = otherSocket.ThisAttachableObject;
+				grabableObject.OnUnGrab.AddListener(HandleAttach);
 			}
 		}
 	}
@@ -37,14 +42,23 @@ public class AttachSocket : MonoBehaviour
 	{
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
-			if (otherSocket.AttachableObjectSO == _connectedObjectSO)
+			if (otherSocket.AttachableObjectSO == _connectedObjectSO
+				&& other.attachedRigidbody != null
+				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
 			{
-				Debug.Log("Detached");
+				_attachedObject = null;
+				grabableObject.OnUnGrab.RemoveListener(HandleAttach);
 			}
 		}
 	}
-
-	public void AttachObject(GameObject AttachableObject)//obj´Â 
+	private void HandleAttach()
+	{
+		if (_attachedObject != null)
+		{
+			_thisObject.AttachObject(_attachedObject);
+		}
+	}
+	public void TestAttachObject(GameObject AttachableObject)//obj´Â 
 	{
 		GameObject AssemblyObject = new GameObject("AssemblyObject");
 		
