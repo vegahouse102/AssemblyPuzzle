@@ -46,6 +46,8 @@ public class AttachSocket : MonoBehaviour
 
 	public void AttachObject(GameObject AttachableObject)//obj´Â 
 	{
+		GameObject AssemblyObject = new GameObject("AssemblyObject");
+		
 		AttachableObject.transform.localPosition = _localAttachPosition;
 		AttachableObject.transform.localRotation = Quaternion.Euler(_localAttachRotation);
 		if (AttachableObject.TryGetComponent<AttachableObject>(out AttachableObject obj)){

@@ -16,7 +16,8 @@ public class PlayerGrab : MonoBehaviour
 	float _grabSpeed;
 	[SerializeField]
 	float _rotationSpeed;
-	
+	[SerializeField]
+	Transform _grabPos;
 
 	public UnityEvent OnStartGrabRotation;
 	public UnityEvent OnEndGrabRotation;
@@ -84,12 +85,8 @@ public class PlayerGrab : MonoBehaviour
 
 				if (_grabedObject.TryGetComponent(out Rigidbody rigidbody))
 				{
-					Vector3 targetPos = _camera.position + _camera.forward * _grabDistance;
-
-					Vector3 velocity = (targetPos - rigidbody.position) * _grabSpeed;
-
-					rigidbody.linearVelocity = velocity;
-					rigidbody.angularVelocity = Vector3.zero;
+					_grabPos.position = _camera.position + _camera.forward * _grabDistance;
+					
 				}
 				break;
 		}
@@ -101,7 +98,7 @@ public class PlayerGrab : MonoBehaviour
 			case GrabState.None:
 				break;
 			case GrabState.Grab:
-				_grabedObject.Grab();
+				_grabedObject.StartGrab(_grabPos);
 				break;
 		}
 	}
