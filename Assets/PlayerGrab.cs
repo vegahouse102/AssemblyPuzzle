@@ -66,11 +66,8 @@ public class PlayerGrab : MonoBehaviour
 				if (actionGetter.InputActions.Player.GrabRotation.IsPressed())
 				{
 					Vector2 delta = actionGetter.InputActions.Player.Look.ReadValue<Vector2>();
-					Quaternion rot =
-					    Quaternion.AngleAxis(delta.y * _rotationSpeed * Time.deltaTime, _camera.right) *
-					    Quaternion.AngleAxis(-delta.x * _rotationSpeed * Time.deltaTime, _camera.up);
-					Rigidbody rigidbody = _grabedObject.GetComponent<Rigidbody>();
-					rigidbody.MoveRotation(rot * rigidbody.rotation);
+					_grabedObject.Rotate(delta,_camera);
+					
 				}
 				break;
 		}

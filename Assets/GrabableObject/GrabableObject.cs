@@ -6,6 +6,8 @@ public class GrabableObject :MonoBehaviour
 
 	[SerializeField]
 	private float _grabSpeed = 6.86f;
+	[SerializeField]
+	private float _rotationSpeed = 4.71f;
 	public UnityEvent OnGrab;
 	public UnityEvent OnUnGrab;
 
@@ -19,6 +21,14 @@ public class GrabableObject :MonoBehaviour
 	{
 		_grabPos = grabPos;
 		OnGrab?.Invoke();
+	}
+	public void Rotate(Vector2 mouseDelta,Transform camera)
+	{
+		Quaternion rot =
+					    Quaternion.AngleAxis(mouseDelta.y * _rotationSpeed * Time.deltaTime, camera.right) *
+					    Quaternion.AngleAxis(-mouseDelta.x * _rotationSpeed * Time.deltaTime, camera.up);
+		Rigidbody rigidbody = GetComponent<Rigidbody>();
+		rigidbody.MoveRotation(rot * rigidbody.rotation);
 	}
 	private void FixedUpdate()
 	{
