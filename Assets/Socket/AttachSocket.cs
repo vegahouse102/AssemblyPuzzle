@@ -8,12 +8,14 @@ public class AttachSocket : MonoBehaviour
 	[SerializeField]
 	PieceSO _connectedObjectSO;
 	[SerializeField]
-	Vector3 _localAttachPosition;
+	Vector3 _attachedLocalPosition;
 	[SerializeField]
-	Vector3 _localAttachRotation;
+	Quaternion _attachedLocalRotation;
 
 
-	private AttachableObject _attachedObject;
+	private AttachSocket _attachedSocket;
+
+
 	public PieceSO AttachableObjectSO => _thisObject.AttachableObjectSO;
 
 	public AttachableObject ThisAttachableObject => _thisObject;
@@ -27,45 +29,56 @@ public class AttachSocket : MonoBehaviour
 	}
 	private void OnTriggerEnter(Collider other)
 	{
+		if (!ThisAttachableObject.IsAttachable)
+			return;
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
 			if (otherSocket.AttachableObjectSO == _connectedObjectSO
 				&&other.attachedRigidbody != null 
 				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
 			{
-				_attachedObject = otherSocket.ThisAttachableObject;
-				grabableObject.OnUnGrab.AddListener(HandleAttach);
+				Debug.Log("socketEnter");
+				_attachedSocket = otherSocket;
+				grabableObject.OnGrab.AddListener(HandleAttach);
 			}
 		}
 	}
 	private void OnTriggerExit(Collider other)
 	{
+		if (!ThisAttachableObject.IsAttachable)
+			return;
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
 			if (otherSocket.AttachableObjectSO == _connectedObjectSO
 				&& other.attachedRigidbody != null
 				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
 			{
-				_attachedObject = null;
-				grabableObject.OnUnGrab.RemoveListener(HandleAttach);
+				Debug.Log("socketExit");
+				_attachedSocket = null;
+				grabableObject.OnGrab.RemoveListener(HandleAttach);
 			}
 		}
 	}
-	private void HandleAttach()
+	private void HandleAttach(bool value)
 	{
-		if (_attachedObject != null)
+		if (value)
+			return;
+		Debug.Log("attach");
+		if (_attachedSocket != null)
 		{
-			_thisObject.AttachObject(_attachedObject);
+			_thisObject.AttachObject(_attachedSocket.ThisAttachableObject,
+				_attachedLocalPosition,_attachedLocalRotation,
+				_attachedSocket._attachedLocalPosition,_attachedSocket._attachedLocalRotation);
 		}
 	}
 	public void TestAttachObject(GameObject AttachableObject)//obj´Â 
 	{
 		GameObject AssemblyObject = new GameObject("AssemblyObject");
 		
-		AttachableObject.transform.localPosition = _localAttachPosition;
-		AttachableObject.transform.localRotation = Quaternion.Euler(_localAttachRotation);
+		AttachableObject.transform.localPosition = _attachedLocalPosition;
+		AttachableObject.transform.localRotation = _attachedLocalRotation;
 		if (AttachableObject.TryGetComponent<AttachableObject>(out AttachableObject obj)){
-			obj.AttachObject(_thisObject);
+			//obj.AttachObject(_thisObject,_attachedLocalPosition,_attachedLocalRotation);
 		}
 	}
 }

@@ -39,15 +39,29 @@ public class PlayerGrab : MonoBehaviour
 	}
 	void OnUpdate(GrabState grabState)
 	{
+#if UNITY_EDITOR
+		if (actionGetter.InputActions.Player.Grab.IsPressed())
+		{
+			Debug.DrawLine(_camera.position, _camera.position+ _camera.forward*_grabMaxDistance);
+		}
+#endif
+
 		switch (grabState)
 		{
 			case GrabState.None:
 				if (actionGetter.InputActions.Player.Grab.WasPressedThisFrame())
-				{
-					if (Physics.Raycast(_camera.position,_camera.forward,out RaycastHit info,_grabMaxDistance)&&info.transform.TryGetComponent<GrabableObject>(out GrabableObject obj))
+				{ 
+					if (Physics.Raycast(_camera.position, _camera.forward, out RaycastHit info, _grabMaxDistance) 
+						&& info.transform.TryGetComponent<GrabableObject>(out GrabableObject obj))
 					{
+						Debug.Log("grabhit");
+						//Debug.DrawRay(_camera.position, _camera.forward);
 						_grabedObject = obj;
 						StateChange(GrabState.Grab);
+					}
+					else
+					{
+						Debug.Log($"ff");
 					}
 				}
 				break;
