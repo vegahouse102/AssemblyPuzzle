@@ -11,7 +11,7 @@ public class AttachableObject : MonoBehaviour
 
 
 	public bool IsAttachable { get; private set; } = true;
-
+	private bool _isAttached;
 
 	private void Awake()
 	{
@@ -33,11 +33,17 @@ public class AttachableObject : MonoBehaviour
 
 	public void SetAttachable(bool value)
 	{
+		if (_isAttached)
+		{
+			return;
+		}
 		IsAttachable = !value;
 	}
 	public void Attached()
 	{
 		Destroy(_rigidbody);
+		_isAttached = true;
+		IsAttachable = false;
 	}
 	public void AttachObject(AttachableObject otherAttachableObject,Vector3 attachedLocalPosition,Quaternion attachedLocalRotation,Vector3 thisLocalPosition,Quaternion thisLocalRotation)
 	{
@@ -47,9 +53,7 @@ public class AttachableObject : MonoBehaviour
 		}
 		Attached();
 		otherAttachableObject.Attached();
-		GameObject root = new GameObject("AssemblyObject");
-		root.AddComponent<Rigidbody>();
-		root.layer = _ignoreLayer;
+		GameObject root = GetAssemblyGameObject();
 
 
 		root.transform.position = transform.position- thisLocalPosition;
@@ -63,6 +67,14 @@ public class AttachableObject : MonoBehaviour
 		otherAttachableObject.transform.localPosition = attachedLocalPosition;
 		otherAttachableObject.transform.localRotation = attachedLocalRotation;
 
+	}
+
+	private GameObject GetAssemblyGameObject()
+	{
+		GameObject result = new GameObject("AssemblyObject");
+		result.AddComponent<Rigidbody>();
+		result.layer = _ignoreLayer;
+		return result;
 	}
 
 

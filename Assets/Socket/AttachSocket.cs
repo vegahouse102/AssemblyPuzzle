@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class AttachSocket : MonoBehaviour
 {
-	[SerializeField]
-	AttachableObject _thisObject;
+
 	[SerializeField]
 	PieceSO _connectedObjectSO;
 	[SerializeField]
@@ -20,11 +19,14 @@ public class AttachSocket : MonoBehaviour
 
 	public AttachableObject ThisAttachableObject => _thisObject;
 
+	private AttachableObject _thisObject;
 	private void Awake()
 	{
+		_thisObject = GetComponentInParent<AttachableObject>();
 #if UNITY_EDITOR
 		Debug.Assert(AttachableObjectSO != null);
 		Debug.Assert(_thisObject!=null);
+		Debug.Assert(_thisObject != null);
 #endif
 	}
 	private void OnTriggerEnter(Collider other)
