@@ -55,9 +55,12 @@ public class AttachableObject : MonoBehaviour
 		otherAttachableObject.Attached();
 		GameObject root = GetAssemblyGameObject();
 
+		Quaternion rootRot = transform.rotation*Quaternion.Inverse(thisLocalRotation);
+		Vector3 rootPos = transform.position - rootRot * thisLocalPosition;
 
-		root.transform.position = transform.position- thisLocalPosition;
-		root.transform.rotation = transform.rotation;
+
+		root.transform.position =rootPos;
+		root.transform.rotation = rootRot;
 
 		transform.parent = root.transform;
 		otherAttachableObject.transform.parent = root.transform;

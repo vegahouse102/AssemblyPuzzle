@@ -8,9 +8,9 @@ public class GrabableObject :MonoBehaviour
 	private float _grabSpeed = 6.86f;
 	[SerializeField]
 	private float _rotationSpeed = 4.71f;
-	public UnityEvent<bool> OnGrab;
-
 	private Transform _grabPos;
+	public UnityEvent<bool> OnGrab;
+	public bool IsGrab { get; private set; }
 	private void Awake()
 	{
 	}
@@ -28,6 +28,7 @@ public class GrabableObject :MonoBehaviour
 	public void StartGrab(Transform grabPos)
 	{
 		_grabPos = grabPos;
+		IsGrab = true;
 		OnGrab?.Invoke(true);
 	}
 	public void Rotate(Vector2 mouseDelta,Transform camera)
@@ -46,6 +47,7 @@ public class GrabableObject :MonoBehaviour
 	public void UnGrab()
 	{
 		_grabPos = null;
+		IsGrab = false;
 		OnGrab?.Invoke(false);
 	}
 }

@@ -37,7 +37,8 @@ public class AttachSocket : MonoBehaviour
 		{
 			if (otherSocket.AttachableObjectSO == _connectedObjectSO
 				&&other.attachedRigidbody != null 
-				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
+				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject)
+				&&grabableObject.IsGrab)
 			{
 				Debug.Log("socketEnter");
 				_attachedSocket = otherSocket;
@@ -53,7 +54,8 @@ public class AttachSocket : MonoBehaviour
 		{
 			if (otherSocket.AttachableObjectSO == _connectedObjectSO
 				&& other.attachedRigidbody != null
-				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
+				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject)
+				&& grabableObject.IsGrab)
 			{
 				Debug.Log("socketExit");
 				_attachedSocket = null;
