@@ -1055,7 +1055,7 @@ MonoBehaviour:
   actionGetter: {fileID: 1960910773}
   _camera: {fileID: 330585546}
   _grabMaxDistance: 10.4
-  _grabDistance: 2
+  _grabDistance: 4.4
   _grabSpeed: 6.86
   _rotationSpeed: 4.71
   _grabPos: {fileID: 1208833169}

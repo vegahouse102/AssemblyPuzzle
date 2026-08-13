@@ -16,11 +16,13 @@ public class GrabableObject :MonoBehaviour
 	}
 	private void FixedUpdate()
 	{
-		if (_grabPos != null)
+		if (IsGrab)
 		{
 			Vector3 velocity = (_grabPos.position - transform.position) * _grabSpeed;
 
 			Rigidbody rigid = GetComponentInParent<Rigidbody>();
+			if (rigid == null)
+				Debug.Log("isnullrigidbody");
 			rigid.linearVelocity = velocity;
 			rigid.angularVelocity = Vector3.zero;
 		}

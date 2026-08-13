@@ -51,39 +51,49 @@ public class PlayerGrab : MonoBehaviour
 			case GrabState.None:
 				if (actionGetter.InputActions.Player.Grab.WasPressedThisFrame())
 				{ 
-					if (Physics.Raycast(_camera.position, _camera.forward, out RaycastHit info, _grabMaxDistance) 
-						&& info.transform.TryGetComponent<GrabableObject>(out GrabableObject obj))
+					if (Physics.Raycast(_camera.position, _camera.forward, out RaycastHit info, _grabMaxDistance,1) )
 					{
-						Debug.Log("grabhit");
-						//Debug.DrawRay(_camera.position, _camera.forward);
-						_grabedObject = obj;
-						StateChange(GrabState.Grab);
-					}
-					else
-					{
-						Debug.Log($"ff");
+						if (info.transform.TryGetComponent<GrabableObject>(out GrabableObject obj))
+						{
+							Debug.Log("grabhit");
+							//Debug.DrawRay(_camera.position, _camera.forward);
+							_grabedObject = obj;
+							StateChange(GrabState.Grab);
+						}
+						else
+						{
+							Debug.Log(
+    $"name={info.collider.gameObject.name}, " +
+    $"layer={info.collider.gameObject.layer}, " +
+    $"layerName={LayerMask.LayerToName(info.collider.gameObject.layer)}"
+);
+						}
+						
 					}
 				}
 				break;
 			case GrabState.Grab:
-				if (actionGetter.InputActions.Player.Grab.WasPressedThisFrame())
-				{
-					StateChange(GrabState.None);
-				}
+
 				if (actionGetter.InputActions.Player.GrabRotation.WasPressedThisFrame())
 				{
 					OnStartGrabRotation?.Invoke();
 				}else if (actionGetter.InputActions.Player.GrabRotation.WasReleasedThisFrame())
 				{
 					OnEndGrabRotation?.Invoke();
-				}
-				if (actionGetter.InputActions.Player.GrabRotation.IsPressed())
+				}else if (actionGetter.InputActions.Player.GrabRotation.IsPressed())
 				{
 					Vector2 delta = actionGetter.InputActions.Player.Look.ReadValue<Vector2>();
-					_grabedObject.Rotate(delta,_camera);
-					
+					_grabedObject.Rotate(delta, _camera);
+
 				}
-				break;
+				else
+				{
+					if (actionGetter.InputActions.Player.Grab.WasPressedThisFrame())
+					{
+						StateChange(GrabState.None);
+					}
+				}
+					break;
 		}
 	}
 	void OnFixedUpdate(GrabState grabState)
