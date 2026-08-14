@@ -35,11 +35,12 @@ public class AttachSocket : MonoBehaviour
 			return;
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
-			if (otherSocket.AttachableObjectSO == _connectedObjectSO
-				&&other.attachedRigidbody != null 
-				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject)
-				&&grabableObject.IsGrab)
+			if (otherSocket.AttachableObjectSO == _connectedObjectSO)
 			{
+				GrabableObject grabableObject = otherSocket.GetComponentInParent<GrabableObject>();
+				if (grabableObject == null||!grabableObject.IsGrab)
+					return;
+
 				Debug.Log("socketEnter");
 				_attachedSocket = otherSocket;
 				grabableObject.OnGrab.AddListener(HandleAttach);
@@ -52,11 +53,12 @@ public class AttachSocket : MonoBehaviour
 			return;
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
-			if (otherSocket.AttachableObjectSO == _connectedObjectSO
-				&& other.attachedRigidbody != null
-				&& other.attachedRigidbody.TryGetComponent<GrabableObject>(out GrabableObject grabableObject)
-				&& grabableObject.IsGrab)
+			if (otherSocket.AttachableObjectSO == _connectedObjectSO)
 			{
+				GrabableObject grabableObject = otherSocket.GetComponentInParent<GrabableObject>();
+				if (grabableObject == null || !grabableObject.IsGrab)
+					return;
+
 				Debug.Log("socketExit");
 				_attachedSocket = null;
 				grabableObject.OnGrab.RemoveListener(HandleAttach);

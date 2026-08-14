@@ -41,6 +41,10 @@ public class AttachableObject : MonoBehaviour
 	}
 	public void Attached()
 	{
+		if (_isAttached)
+		{
+			return;
+		}
 		Destroy(_rigidbody);
 		_isAttached = true;
 		IsAttachable = false;
@@ -82,7 +86,7 @@ public class AttachableObject : MonoBehaviour
 		}
 
 
-		if (otherAttachableObject.transform.parent != null)
+		if (otherAttachableObject.transform.parent == null)
 		{
 			otherAttachableObject.transform.parent = root.transform;
 			otherAttachableObject.transform.localPosition = attachedLocalPosition;
