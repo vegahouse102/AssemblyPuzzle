@@ -70,7 +70,7 @@ public class AttachableObject : MonoBehaviour
 			root = transform.parent.gameObject;
 		}
 
-		Quaternion attachedSocketResult = Quaternion.Inverse(thisSocketConnection.rotation);
+		Quaternion attachedSocketResult = Quaternion.Inverse(thisSocketConnection.rotation);//맞닿는 connection들은 rotation이 inverse여야함
 		Quaternion attachedSocketTurn = attachedSocketResult * Quaternion.Inverse(attachedSocketConnection.rotation);
 		
 		if (attachedSocketAttachableObject.transform.parent == null)
