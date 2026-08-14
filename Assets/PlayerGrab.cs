@@ -53,7 +53,7 @@ public class PlayerGrab : MonoBehaviour
 				{ 
 					if (Physics.Raycast(_camera.position, _camera.forward, out RaycastHit info, _grabMaxDistance,1) )
 					{
-						if (info.transform.TryGetComponent<GrabableObject>(out GrabableObject obj))
+						if (info.collider.TryGetComponent<GrabableObject>(out GrabableObject obj))
 						{
 							Debug.Log("grabhit");
 							//Debug.DrawRay(_camera.position, _camera.forward);
@@ -63,10 +63,12 @@ public class PlayerGrab : MonoBehaviour
 						else
 						{
 							Debug.Log(
-    $"name={info.collider.gameObject.name}, " +
-    $"layer={info.collider.gameObject.layer}, " +
-    $"layerName={LayerMask.LayerToName(info.collider.gameObject.layer)}"
-);
+							    $"Hit Transform = {info.transform.name}\n" +
+							    $"Hit Collider = {info.collider.name}\n" +
+							    $"Parent = {info.transform.parent?.name}\n" +
+							    $"Has Grabable = {info.transform.GetComponent<GrabableObject>() != null}\n" +
+							    $"Parent Has Grabable = {info.transform.GetComponentInParent<GrabableObject>() != null}"
+							);
 						}
 						
 					}
@@ -82,8 +84,6 @@ public class PlayerGrab : MonoBehaviour
 					OnEndGrabRotation?.Invoke();
 				}else if (actionGetter.InputActions.Player.GrabRotation.IsPressed())
 				{
-					Vector2 delta = actionGetter.InputActions.Player.Look.ReadValue<Vector2>();
-					_grabedObject.Rotate(delta, _camera);
 
 				}
 				else
@@ -103,11 +103,12 @@ public class PlayerGrab : MonoBehaviour
 			case GrabState.None:
 				break;
 			case GrabState.Grab:
-
-				if (_grabedObject.TryGetComponent(out Rigidbody rigidbody))
+				_grabPos.position = _camera.position + _camera.forward * _grabDistance;
+				if (actionGetter.InputActions.Player.GrabRotation.IsPressed())
 				{
-					_grabPos.position = _camera.position + _camera.forward * _grabDistance;
-					
+					Vector2 delta = actionGetter.InputActions.Player.Look.ReadValue<Vector2>();
+					_grabedObject.Rotate(delta, _camera);
+
 				}
 				break;
 		}
