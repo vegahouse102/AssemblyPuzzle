@@ -6,23 +6,25 @@ public class AttachSocket : MonoBehaviour
 
 	[SerializeField]
 	PieceSO _connectedObjectSO;
-	[SerializeField]
-	Vector3 _attachedLocalPosition;
-	[SerializeField]
-	Quaternion _attachedLocalRotation;
+	
+	Transform _socketTransform;
 
 
 	private AttachSocket _attachedSocket;
 
 
+	
+
+	private AttachableObject _thisObject;
+
 	public PieceSO AttachableObjectSO => _thisObject.AttachableObjectSO;
 
 	public AttachableObject ThisAttachableObject => _thisObject;
-
-	private AttachableObject _thisObject;
 	private void Awake()
 	{
 		_thisObject = GetComponentInParent<AttachableObject>();
+
+		_socketTransform = transform;
 #if UNITY_EDITOR
 		Debug.Assert(AttachableObjectSO != null);
 		Debug.Assert(_thisObject!=null);
@@ -73,18 +75,12 @@ public class AttachSocket : MonoBehaviour
 		if (_attachedSocket != null)
 		{
 			_thisObject.AttachObject(_attachedSocket.ThisAttachableObject,
-				_attachedLocalPosition,_attachedLocalRotation,
-				_attachedSocket._attachedLocalPosition,_attachedSocket._attachedLocalRotation);
+				_attachedSocket._socketTransform,_socketTransform);
 		}
 	}
 	public void TestAttachObject(GameObject AttachableObject)//obj´Â 
 	{
 		GameObject AssemblyObject = new GameObject("AssemblyObject");
-		
-		AttachableObject.transform.localPosition = _attachedLocalPosition;
-		AttachableObject.transform.localRotation = _attachedLocalRotation;
-		if (AttachableObject.TryGetComponent<AttachableObject>(out AttachableObject obj)){
-			//obj.AttachObject(_thisObject,_attachedLocalPosition,_attachedLocalRotation);
-		}
+	
 	}
 }

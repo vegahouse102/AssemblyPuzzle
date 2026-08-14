@@ -1,3 +1,5 @@
+using DG.Tweening;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class AttachableObject : MonoBehaviour
@@ -49,60 +51,47 @@ public class AttachableObject : MonoBehaviour
 		_isAttached = true;
 		IsAttachable = false;
 	}
-	public void AttachObject(AttachableObject otherAttachableObject,Vector3 attachedLocalPosition,Quaternion attachedLocalRotation,Vector3 thisLocalPosition,Quaternion thisLocalRotation)
+	public void AttachObject(AttachableObject attachedSocketAttachableObject,Transform attachedSocketConnection,Transform thisSocketConnection)
 	{
 		if (!IsAttachable)
 		{
 			return;
 		}
 		Attached();
-		otherAttachableObject.Attached();
-		GameObject root = GetAssemblyGameObject();
-
-			
-
-		Quaternion rootRot = transform.rotation*Quaternion.Inverse(thisLocalRotation);
-		Vector3 rootPos = transform.position - rootRot * thisLocalPosition;
-
-
-		root.transform.position = rootPos;
-		root.transform.rotation = rootRot;
-
-
-
+		attachedSocketAttachableObject.Attached();
+		GameObject root = null;
 		if (transform.parent == null)
 		{
+			root = GetAssemblyGameObject();
 			transform.parent = root.transform;
 		}
 		else
 		{
-			transform.parent.rotation = rootRot;
-			transform.parent.position = rootPos;
-			foreach (Transform child in transform.parent)
-			{
-				child.parent = root.transform;
-			}
-			Destroy(transform.parent);
+			root = transform.parent.gameObject;
 		}
 
-
-		if (otherAttachableObject.transform.parent == null)
+		Quaternion attachedSocketResult = Quaternion.Inverse(thisSocketConnection.rotation);
+		Quaternion attachedSocketTurn = attachedSocketResult * Quaternion.Inverse(attachedSocketConnection.rotation);
+		
+		if (attachedSocketAttachableObject.transform.parent == null)
 		{
-			otherAttachableObject.transform.parent = root.transform;
-			otherAttachableObject.transform.localPosition = attachedLocalPosition;
-			otherAttachableObject.transform.localRotation = attachedLocalRotation;
+			attachedSocketAttachableObject.transform.rotation = attachedSocketTurn*attachedSocketAttachableObject.transform.rotation;
+			Vector3 posDiff = thisSocketConnection.position - attachedSocketConnection.position;
+			attachedSocketAttachableObject.transform.position += posDiff;
+
+			attachedSocketAttachableObject.transform.parent = root.transform;
 		}
 		else
 		{
-			otherAttachableObject.transform.parent.rotation = rootRot;
-			otherAttachableObject.transform.parent.position = rootPos;
-			foreach (Transform child in otherAttachableObject.transform.parent)
+			attachedSocketAttachableObject.transform.parent.rotation = attachedSocketTurn * attachedSocketAttachableObject.transform.parent.rotation;
+			Vector3 posDiff = thisSocketConnection.position - attachedSocketConnection.transform.position;
+			attachedSocketAttachableObject.transform.parent.position += posDiff;
+			foreach (Transform child in attachedSocketAttachableObject.transform.parent)
 			{
 				child.parent = root.transform;
 			}
-			Destroy(otherAttachableObject.transform.parent);
-		}		
-
+			Destroy(attachedSocketAttachableObject.transform.parent);
+		}
 	}
 
 	private GameObject GetAssemblyGameObject()
