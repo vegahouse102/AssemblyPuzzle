@@ -52,7 +52,7 @@ public class GrabableObject :MonoBehaviour
 			Vector3 rootPos = transform.position + rot * (transform.parent.position-transform.position) ;
 			rigid.MoveRotation(rot*rigid.rotation );
 			rigid.MovePosition(rootPos);
-			Debug.Log($"{rootPos} {gameObject.name}");
+			//Debug.Log($"{rootPos} {gameObject.name}");
 		}
 	}
 

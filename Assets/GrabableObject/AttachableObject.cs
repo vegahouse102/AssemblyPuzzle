@@ -55,20 +55,49 @@ public class AttachableObject : MonoBehaviour
 		otherAttachableObject.Attached();
 		GameObject root = GetAssemblyGameObject();
 
+			
+
 		Quaternion rootRot = transform.rotation*Quaternion.Inverse(thisLocalRotation);
 		Vector3 rootPos = transform.position - rootRot * thisLocalPosition;
 
 
-		root.transform.position =rootPos;
+		root.transform.position = rootPos;
 		root.transform.rotation = rootRot;
 
-		transform.parent = root.transform;
-		otherAttachableObject.transform.parent = root.transform;
 
 
+		if (transform.parent == null)
+		{
+			transform.parent = root.transform;
+		}
+		else
+		{
+			transform.parent.rotation = rootRot;
+			transform.parent.position = rootPos;
+			foreach (Transform child in transform.parent)
+			{
+				child.parent = root.transform;
+			}
+			Destroy(transform.parent);
+		}
 
-		otherAttachableObject.transform.localPosition = attachedLocalPosition;
-		otherAttachableObject.transform.localRotation = attachedLocalRotation;
+
+		if (otherAttachableObject.transform.parent != null)
+		{
+			otherAttachableObject.transform.parent = root.transform;
+			otherAttachableObject.transform.localPosition = attachedLocalPosition;
+			otherAttachableObject.transform.localRotation = attachedLocalRotation;
+		}
+		else
+		{
+			otherAttachableObject.transform.parent.rotation = rootRot;
+			otherAttachableObject.transform.parent.position = rootPos;
+			foreach (Transform child in otherAttachableObject.transform.parent)
+			{
+				child.parent = root.transform;
+			}
+			Destroy(otherAttachableObject.transform.parent);
+		}		
 
 	}
 
