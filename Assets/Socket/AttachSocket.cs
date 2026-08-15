@@ -19,7 +19,7 @@ public class AttachSocket : MonoBehaviour
 
 	public PieceSO AttachableObjectSO => _thisObject.AttachableObjectSO;
 
-	public AttachableObject ThisAttachableObject => _thisObject;
+	//public AttachableObject ThisAttachableObject => _thisObject;
 	private void Awake()
 	{
 		_thisObject = GetComponentInParent<AttachableObject>();
@@ -33,7 +33,7 @@ public class AttachSocket : MonoBehaviour
 	}
 	private void OnTriggerEnter(Collider other)
 	{
-		if (!ThisAttachableObject.IsAttachable)
+		if (!_thisObject.IsAttachable)
 			return;
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
@@ -51,7 +51,7 @@ public class AttachSocket : MonoBehaviour
 	}
 	private void OnTriggerExit(Collider other)
 	{
-		if (!ThisAttachableObject.IsAttachable)
+		if (!_thisObject.IsAttachable)
 			return;
 		if (other.TryGetComponent<AttachSocket>(out AttachSocket otherSocket))
 		{
@@ -74,7 +74,7 @@ public class AttachSocket : MonoBehaviour
 		Debug.Log("attach");
 		if (_attachedSocket != null)
 		{
-			_thisObject.AttachObject(_attachedSocket.ThisAttachableObject,
+			_thisObject.AttachObject(_attachedSocket._thisObject,
 				_attachedSocket._socketTransform,_socketTransform);
 		}
 	}

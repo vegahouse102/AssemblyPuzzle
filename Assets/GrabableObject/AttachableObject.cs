@@ -71,19 +71,35 @@ public class AttachableObject : MonoBehaviour
 		}
 
 		Quaternion attachedSocketResult = Quaternion.Inverse(thisSocketConnection.rotation);//맞닿는 connection들은 rotation이 inverse여야함
-		Quaternion attachedSocketTurn = attachedSocketResult * Quaternion.Inverse(attachedSocketConnection.rotation);
-		
+		Quaternion turn = attachedSocketResult * Quaternion.Inverse(attachedSocketConnection.rotation);
+
+		Vector3 resultEuler = attachedSocketResult.eulerAngles;
+		Vector3 turnEuler = turn.eulerAngles;
 		if (attachedSocketAttachableObject.transform.parent == null)
 		{
-			attachedSocketAttachableObject.transform.rotation = attachedSocketTurn*attachedSocketAttachableObject.transform.rotation;
+			Vector3 attachedStartEuler = attachedSocketAttachableObject.transform.rotation.eulerAngles;
+
+
+			attachedSocketAttachableObject.transform.rotation = turn*attachedSocketAttachableObject.transform.rotation;
+
+
+			Vector3 attachedEndEuler = attachedSocketAttachableObject.transform.rotation.eulerAngles;
+			Vector3 thisSockectForward = thisSocketConnection.forward;
+			Vector3 attachedSocketForward = attachedSocketConnection.forward;
+
+
 			Vector3 posDiff = thisSocketConnection.position - attachedSocketConnection.position;
 			attachedSocketAttachableObject.transform.position += posDiff;
 
 			attachedSocketAttachableObject.transform.parent = root.transform;
+			Debug.Log(
+    $"this forward = {thisSocketConnection.forward}\n" +
+    $"attached forward = {attachedSocketConnection.forward}"
+			);
 		}
 		else
 		{
-			attachedSocketAttachableObject.transform.parent.rotation = attachedSocketTurn * attachedSocketAttachableObject.transform.parent.rotation;
+			attachedSocketAttachableObject.transform.parent.rotation = turn * attachedSocketAttachableObject.transform.parent.rotation;
 			Vector3 posDiff = thisSocketConnection.position - attachedSocketConnection.transform.position;
 			attachedSocketAttachableObject.transform.parent.position += posDiff;
 			foreach (Transform child in attachedSocketAttachableObject.transform.parent)
