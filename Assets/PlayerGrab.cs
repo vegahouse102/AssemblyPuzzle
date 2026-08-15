@@ -55,7 +55,7 @@ public class PlayerGrab : MonoBehaviour
 					{
 						if (info.collider.TryGetComponent<GrabableObject>(out GrabableObject obj))
 						{
-							Debug.Log("grabhit");
+							//Debug.Log("grabhit");
 							//Debug.DrawRay(_camera.position, _camera.forward);
 							_grabedObject = obj;
 							StateChange(GrabState.Grab);

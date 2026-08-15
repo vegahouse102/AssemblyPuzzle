@@ -57,6 +57,7 @@ public class AttachableObject : MonoBehaviour
 		{
 			return;
 		}
+		Debug.Log("AttachedObject");
 		Attached();
 		attachedSocketAttachableObject.Attached();
 		GameObject root = null;
@@ -70,32 +71,28 @@ public class AttachableObject : MonoBehaviour
 			root = transform.parent.gameObject;
 		}
 
-		Quaternion attachedSocketResult = Quaternion.Inverse(thisSocketConnection.rotation);//맞닿는 connection들은 rotation이 inverse여야함
-		Quaternion turn = attachedSocketResult * Quaternion.Inverse(attachedSocketConnection.rotation);
+		Quaternion targetRotation =
+    Quaternion.LookRotation(
+	-thisSocketConnection.forward,
+	thisSocketConnection.up
+    );//맞닿는 connection들은 rotation이 inverse여야함
+		Quaternion turn = targetRotation * Quaternion.Inverse(attachedSocketConnection.rotation);
+		
 
-		Vector3 resultEuler = attachedSocketResult.eulerAngles;
-		Vector3 turnEuler = turn.eulerAngles;
 		if (attachedSocketAttachableObject.transform.parent == null)
 		{
-			Vector3 attachedStartEuler = attachedSocketAttachableObject.transform.rotation.eulerAngles;
+			
 
 
 			attachedSocketAttachableObject.transform.rotation = turn*attachedSocketAttachableObject.transform.rotation;
 
 
-			Vector3 attachedEndEuler = attachedSocketAttachableObject.transform.rotation.eulerAngles;
-			Vector3 thisSockectForward = thisSocketConnection.forward;
-			Vector3 attachedSocketForward = attachedSocketConnection.forward;
 
 
 			Vector3 posDiff = thisSocketConnection.position - attachedSocketConnection.position;
 			attachedSocketAttachableObject.transform.position += posDiff;
 
 			attachedSocketAttachableObject.transform.parent = root.transform;
-			Debug.Log(
-    $"this forward = {thisSocketConnection.forward}\n" +
-    $"attached forward = {attachedSocketConnection.forward}"
-			);
 		}
 		else
 		{
