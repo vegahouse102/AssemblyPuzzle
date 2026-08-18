@@ -16,7 +16,8 @@ public class GrabableObject :MonoBehaviour
 	}
 	private void FixedUpdate()
 	{
-		if (IsGrab)
+		
+		if (IsGrab&&_grabPos!=null)
 		{
 			Vector3 velocity = (_grabPos.position - transform.position) * _grabSpeed;
 
@@ -27,12 +28,28 @@ public class GrabableObject :MonoBehaviour
 			rigid.angularVelocity = Vector3.zero;
 		}
 	}
+	private void SetGrab(bool value)
+	{
+		IsGrab = value;
+		OnGrab?.Invoke(value);
+	}
 	public void StartGrab(Transform grabPos)
 	{
 		_grabPos = grabPos;
-		IsGrab = true;
-		OnGrab?.Invoke(true);
+		
 		Collider collider = GetComponent<Collider>();
+		Transform root = collider.attachedRigidbody.transform;
+		foreach(Transform child in root)
+		{
+			if(child.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
+			{
+				grabableObject.SetGrab(true);
+			}
+		}
+		if (transform.parent == null)
+		{
+			SetGrab(true);
+		}
 	//	collider.isTrigger = true;
 	}
 	public void Rotate(Vector2 mouseDelta,Transform camera)
@@ -59,9 +76,19 @@ public class GrabableObject :MonoBehaviour
 	public void UnGrab()
 	{
 		_grabPos = null;
-		IsGrab = false;
-		OnGrab?.Invoke(false);
 		Collider collider = GetComponent<Collider>();
+		Transform root = collider.attachedRigidbody.transform;
+		foreach (Transform child in root)
+		{
+			if (child.TryGetComponent<GrabableObject>(out GrabableObject grabableObject))
+			{
+				grabableObject.SetGrab(false);
+			}
+		}
+		if (transform.parent == null)
+		{
+			SetGrab(false);
+		}
 		//collider.isTrigger = false;
 	}
 }

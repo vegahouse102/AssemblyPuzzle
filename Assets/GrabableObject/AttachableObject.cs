@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -49,7 +50,6 @@ public class AttachableObject : MonoBehaviour
 		}
 		Destroy(_rigidbody);
 		_isAttached = true;
-		IsAttachable = false;
 	}
 	public void AttachObject(AttachableObject attachedSocketAttachableObject,Transform attachedSocketConnection,Transform thisSocketConnection)
 	{
@@ -57,6 +57,9 @@ public class AttachableObject : MonoBehaviour
 		{
 			return;
 		}
+		if (attachedSocketAttachableObject == this)
+			return;
+
 		Debug.Log("AttachedObject");
 		Attached();
 		attachedSocketAttachableObject.Attached();
@@ -72,21 +75,17 @@ public class AttachableObject : MonoBehaviour
 		}
 
 		Quaternion targetRotation =
-    Quaternion.LookRotation(
-	-thisSocketConnection.forward,
-	thisSocketConnection.up
-    );//맞닿는 connection들은 rotation이 inverse여야함
+		    Quaternion.LookRotation(
+			-thisSocketConnection.forward,
+			thisSocketConnection.up
+		    );//맞닿는 connection들은서로  rotation의 z축이 반대여야함여야함 up축방향이 같아야함
 		Quaternion turn = targetRotation * Quaternion.Inverse(attachedSocketConnection.rotation);
 		
 
 		if (attachedSocketAttachableObject.transform.parent == null)
 		{
 			
-
-
 			attachedSocketAttachableObject.transform.rotation = turn*attachedSocketAttachableObject.transform.rotation;
-
-
 
 
 			Vector3 posDiff = thisSocketConnection.position - attachedSocketConnection.position;
@@ -99,11 +98,20 @@ public class AttachableObject : MonoBehaviour
 			attachedSocketAttachableObject.transform.parent.rotation = turn * attachedSocketAttachableObject.transform.parent.rotation;
 			Vector3 posDiff = thisSocketConnection.position - attachedSocketConnection.transform.position;
 			attachedSocketAttachableObject.transform.parent.position += posDiff;
-			foreach (Transform child in attachedSocketAttachableObject.transform.parent)
+
+			List<Transform> childs = new();
+			Transform attachedParentTransform = attachedSocketAttachableObject.transform.parent;
+
+			for (int i = 0; i <  attachedParentTransform.childCount; i++)
 			{
-				child.parent = root.transform;
+				childs.Add(attachedParentTransform.GetChild(i));
 			}
-			Destroy(attachedSocketAttachableObject.transform.parent);
+			foreach (Transform child in childs)
+			{
+				child.SetParent(root.transform, true);
+			}
+			//Debug.Log(attachedParentTransform.gameObject.name);
+			//Destroy(attachedParentTransform.gameObject);
 		}
 	}
 
@@ -111,6 +119,7 @@ public class AttachableObject : MonoBehaviour
 	{
 		GameObject result = new GameObject("AssemblyObject");
 		result.AddComponent<Rigidbody>();
+		result.AddComponent<AssemblyObject>();
 		result.layer = _ignoreLayer;
 		return result;
 	}

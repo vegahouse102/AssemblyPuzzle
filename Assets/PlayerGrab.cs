@@ -62,13 +62,6 @@ public class PlayerGrab : MonoBehaviour
 						}
 						else
 						{
-							Debug.Log(
-							    $"Hit Transform = {info.transform.name}\n" +
-							    $"Hit Collider = {info.collider.name}\n" +
-							    $"Parent = {info.transform.parent?.name}\n" +
-							    $"Has Grabable = {info.transform.GetComponent<GrabableObject>() != null}\n" +
-							    $"Parent Has Grabable = {info.transform.GetComponentInParent<GrabableObject>() != null}"
-							);
 						}
 						
 					}
